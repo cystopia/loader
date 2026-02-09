@@ -1,7 +1,15 @@
 --!strict
 
-local launch = require("@utils/launch")
-local get_hash = require("@utils/get-hash")
+local Players = game:GetService("Players")
 
-local hash = get_hash()
-launch(hash)
+local launch = require("@utils/launch")
+local validate = require("@utils/validate")
+
+local local_player = Players.LocalPlayer
+local success, result = validate()
+
+if success then
+    launch(result)
+else
+    local_player:Kick(result)
+end

@@ -20,12 +20,7 @@ do
 
         return function(hash: string)
             local content = game:HttpGet(LINK .. hash .. FORMAT)
-
-            print(content)
-
             local func = loadstring(content)
-
-            print(func)
 
             if func then
                 func()
@@ -33,12 +28,27 @@ do
         end
     end
     function __DARKLUA_BUNDLE_MODULES.b()
+        local GuiService = game:GetService('GuiService')
+        local UserInputService = game:GetService('UserInputService')
+
+        return function()
+            if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
+                return 'Mobile'
+            end
+            if GuiService:IsTenFootInterface() then
+                return 'Console'
+            end
+
+            return 'PC'
+        end
+    end
+    function __DARKLUA_BUNDLE_MODULES.c()
         return table.freeze({
             [8144728961] = '',
         })
     end
-    function __DARKLUA_BUNDLE_MODULES.c()
-        local HASHES = __DARKLUA_BUNDLE_MODULES.load('b')
+    function __DARKLUA_BUNDLE_MODULES.d()
+        local HASHES = __DARKLUA_BUNDLE_MODULES.load('c')
         local GAME = game.GameId
         local PLACE = game.PlaceId
 
@@ -48,10 +58,34 @@ do
             return hash
         end
     end
+    function __DARKLUA_BUNDLE_MODULES.e()
+        local get_device = __DARKLUA_BUNDLE_MODULES.load('b')
+        local get_hash = __DARKLUA_BUNDLE_MODULES.load('d')
+
+        return function()
+            if get_device() ~= 'PC' then
+                return false, 'Sorry! Your device is currently not supported.'
+            end
+
+            local hash = get_hash()
+
+            if not hash then
+                return false, 'This game is currently not supported.'
+            end
+
+            return true, hash
+        end
+    end
 end
 
+local Players = game:GetService('Players')
 local launch = __DARKLUA_BUNDLE_MODULES.load('a')
-local get_hash = __DARKLUA_BUNDLE_MODULES.load('c')
-local hash = get_hash()
+local validate = __DARKLUA_BUNDLE_MODULES.load('e')
+local local_player = Players.LocalPlayer
+local success, result = validate()
 
-launch(hash)
+if success then
+    launch(result)
+else
+    local_player:Kick(result)
+end
