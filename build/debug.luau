@@ -44,7 +44,7 @@ do
     end
     function __DARKLUA_BUNDLE_MODULES.c()
         return table.freeze({
-            [8144728961] = '',
+            [8144728961] = '2f66cef4b40ea8b836b54a0aad4dd59b',
         })
     end
     function __DARKLUA_BUNDLE_MODULES.d()
