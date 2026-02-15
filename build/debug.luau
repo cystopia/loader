@@ -53,9 +53,7 @@ do
         local PLACE = game.PlaceId
 
         return function()
-            local hash = HASHES[GAME] or HASHES[PLACE]
-
-            return hash
+            return HASHES[GAME] or HASHES[PLACE]
         end
     end
     function __DARKLUA_BUNDLE_MODULES.e()
